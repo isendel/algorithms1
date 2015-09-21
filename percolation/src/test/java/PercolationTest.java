@@ -135,19 +135,34 @@ public class PercolationTest {
     }
 
     @Test
-    public void testPercolateRate() throws Exception {
-        int N = 20;
-        int openCount = 0;
-        Percolation p = new Percolation(N);
-        while (!p.percolates()) {
-            int i = StdRandom.uniform(1, N+1);
-            int j = StdRandom.uniform(1,N+1);
-            if (!p.isOpen(i,j)) {
-                p.open(i, j);
-                openCount++;
-            }
-        }
-        System.out.println("System percolates after " + openCount + " open sites.");
+    public void testPercolateBackward() throws Exception {
+        Percolation p = new Percolation(4);
+        p.open(1,3);
+        p.open(2,3);
+        p.open(3,3);
+        p.open(4,3);
+        assertTrue(p.percolates());
+        p.open(4, 1);
+        assertFalse(p.isFull(4, 1));
+        p.open(3, 1);
+        p.open(2, 1);
+        p.open(1, 1);
+        assertTrue(p.isFull(4, 1));
+    }
 
+    @Test
+    public void testPercolateBackward2() throws Exception {
+        Percolation p = new Percolation(4);
+        p.open(1,3);
+        p.open(2,3);
+        p.open(3,3);
+        p.open(4,3);
+        assertTrue(p.percolates());
+        p.open(2, 1);
+        assertFalse(p.isFull(2, 1));
+        p.open(3, 1);
+        p.open(4, 1);
+        p.open(1, 1);
+        assertTrue(p.isFull(4, 1));
     }
 }
