@@ -9,24 +9,34 @@ public class Percolation {
     private final int n;
     private boolean[][] sites;
     private WeightedQuickUnionUF unionUF;
+    private boolean percolates = false;
+    private int[] bottomOpened;
+    private int bottomOpenedCount = 0;
+
 
     public Percolation(int n) {
         if (n <= 0) throw new IllegalArgumentException("N value has to be greater then zero");
         this.n = n;
         sites = new boolean[n][n];
+        bottomOpened = new int[n];
         unionUF = new WeightedQuickUnionUF(n * n + 2);
-        for (int i = 1; i <= n; i++) {
-            unionUF.union(0, i);
-            unionUF.union(n * n, n * (n - 1) + i);
-        }
     }
 
     public void open(int i, int j) {
         if (isOpen(i, j)) return;
         assertIndexBoundries(i, j);
         sites[i - 1][j - 1] = true;
-
-        int siteValue = computeNum(i - 1, j - 1);
+        int computeNum = computeNum(i - 1, j - 1);
+        if (i == 1) {
+            unionUF.union(computeNum, 0);
+        }
+        System.out.println("computeNum = " + computeNum);
+        System.out.println("unionUF = " + unionUF.find(computeNum));
+        if (i == n) {
+            bottomOpened[bottomOpenedCount++] = computeNum;
+//            unionUF.union(computeNum(i - 1, j - 1), n * n);
+        }
+        int siteValue = computeNum;
         if (i < n && isOpen(i + 1, j)) {
             unionUF.union(siteValue, computeNum(i, j - 1));
         }
@@ -39,6 +49,14 @@ public class Percolation {
         if (j > 1 && isOpen(i, j - 1)) {
             unionUF.union(siteValue, computeNum(i - 1, j - 2));
         }
+        if (!percolates && isFull(i, j)) {
+            for (int k = 0; k < bottomOpenedCount; k++) {
+                if (unionUF.connected(0, bottomOpened[k])) {
+                    percolates = true;
+                    break;
+                }
+            }
+        }
     }
 
     public boolean isOpen(int i, int j) {
@@ -48,12 +66,11 @@ public class Percolation {
 
     public boolean isFull(int i, int j) {
         assertIndexBoundries(i, j);
-        return isOpen(i, j) && unionUF.connected(0, computeNum(i - 1, j - 1));
+        return unionUF.connected(0, computeNum(i - 1, j - 1));
     }
 
     public boolean percolates() {
-        return unionUF.connected(0, n * n);
-
+        return percolates;
     }
 
     private void assertIndexBoundries(int i, int j) {
@@ -63,7 +80,8 @@ public class Percolation {
     }
 
     private int computeNum(int i, int j) {
-        return i * n + j;
+        return i * n + j + 1;
     }
+
 
 }

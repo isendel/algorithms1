@@ -1,0 +1,20 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+
+ext.libraries = [ // Groovy map literal
+                  algs4: "$rootProject.projectDir/lib/algs4.jar",
+                  junit: "junit:junit:4.+"
+]
+
+//subprojects {
+//    dependencies {
+//        compile files("lib/algs4.jar")
+//        testCompile "junit:junit:4.+"
+//    }
+
+//}

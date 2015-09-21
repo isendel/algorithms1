@@ -140,7 +140,7 @@ public class PercolationTest {
         int openCount = 0;
         Percolation p = new Percolation(N);
         while (!p.percolates()) {
-            int i = StdRandom.uniform(1, N + 1);
+            int i = StdRandom.uniform(1, N+1);
             int j = StdRandom.uniform(1,N+1);
             if (!p.isOpen(i,j)) {
                 p.open(i, j);
