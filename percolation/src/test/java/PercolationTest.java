@@ -165,4 +165,23 @@ public class PercolationTest {
         p.open(1, 1);
         assertTrue(p.isFull(4, 1));
     }
+
+    @Test
+    public void testPercolateBackward3() throws Exception {
+        Percolation p = new Percolation(4);
+        p.open(2,3);
+        p.open(3,3);
+        p.open(4, 3);
+        assertFalse(p.percolates());
+        p.open(4, 1);
+        assertFalse(p.isFull(4, 1));
+        p.open(3, 1);
+        p.open(2, 1);
+
+        p.open(1,3);
+        assertFalse(p.isFull(4, 1));
+
+        p.open(1, 1);
+        assertTrue(p.isFull(4, 1));
+    }
 }
